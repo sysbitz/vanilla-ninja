@@ -14,9 +14,11 @@ export default function Landing() {
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      gsap.from(".hero-title > span", { y: 60, opacity: 0, stagger: 0.08, duration: 0.8, ease: "power3.out" });
-      gsap.from(".hero-sub", { y: 20, opacity: 0, delay: 0.4, duration: 0.6 });
-      gsap.from(".hero-cta", { y: 20, opacity: 0, delay: 0.6, duration: 0.6 });
+      // clearProps ensures elements end with no inline opacity/transform left behind,
+      // so even if anything aborts the tween mid-flight the content stays visible.
+      gsap.from(".hero-title > span", { y: 40, opacity: 0, stagger: 0.06, duration: 0.7, ease: "power3.out", clearProps: "all" });
+      gsap.from(".hero-sub", { y: 16, opacity: 0, delay: 0.3, duration: 0.5, clearProps: "all" });
+      gsap.from(".hero-cta", { y: 16, opacity: 0, delay: 0.5, duration: 0.5, clearProps: "all" });
       gsap.to(".float-emoji", { y: -16, repeat: -1, yoyo: true, duration: 2.4, ease: "sine.inOut", stagger: 0.2 });
     }, heroRef);
     return () => ctx.revert();
