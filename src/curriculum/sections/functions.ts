@@ -1,0 +1,80 @@
+import type { Section } from "../types";
+import { STAGE_CSS, STAGE_HTML } from "../shared";
+
+export const functionsSection: Section = {
+  id: "functions",
+  title: "Functions",
+  emoji: "🧩",
+  blurb: "Declarations, arrows, scope, recursion.",
+  levels: [
+    {
+      id: "fn-1",
+      title: "First Function",
+      emoji: "🎯",
+      difficulty: 1,
+      theory: "Functions are reusable blocks. Declare with `function name(){}` or arrow `const name = () => {}`.",
+      goal: "Write `square(n)` returning n*n.",
+      starterCode: `function square(n){\n  // return n*n\n}\n`,
+      steps: [
+        { label: "square(4) === 16", test: `square(4) === 16` },
+        { label: "square(0) === 0", test: `square(0) === 0` },
+        { label: "square(-3) === 9", test: `square(-3) === 9` },
+      ],
+      hints: ["Use return n*n;"],
+      solution: `function square(n){ return n*n; }`,
+      quiz: [
+        { q: "Arrow functions DO NOT have their own…", options: ["return value", "this", "parameters", "name"], answer: 1 },
+      ],
+    },
+    {
+      id: "fn-2",
+      title: "Default & Rest Params",
+      emoji: "🧰",
+      difficulty: 2,
+      theory: "Default values: `function f(x=1)`. Rest collects extras: `function f(...nums)`.",
+      goal: "Write `sum(...nums)` returning the sum (0 when empty).",
+      starterCode: `function sum(...nums){\n  // reduce nums\n}\n`,
+      steps: [
+        { label: "sum() === 0", test: `sum() === 0` },
+        { label: "sum(1,2,3) === 6", test: `sum(1,2,3) === 6` },
+        { label: "sum(10,-5,5) === 10", test: `sum(10,-5,5) === 10` },
+      ],
+      hints: ["return nums.reduce((a,b)=>a+b, 0);"],
+      solution: `function sum(...nums){ return nums.reduce((a,b)=>a+b,0); }`,
+      quiz: [{ q: "Rest must be the…", options: ["first param", "last param", "anywhere", "named 'rest'"], answer: 1 }],
+    },
+    {
+      id: "fn-3",
+      title: "Recursion: Factorial",
+      emoji: "🌀",
+      difficulty: 2,
+      theory: "A recursive function calls itself. Always include a base case.",
+      goal: "Write `fact(n)` using recursion. fact(0) === 1.",
+      starterCode: `function fact(n){\n  // base + recursive case\n}\n`,
+      steps: [
+        { label: "fact(0) === 1", test: `fact(0) === 1` },
+        { label: "fact(5) === 120", test: `fact(5) === 120` },
+        { label: "fact(7) === 5040", test: `fact(7) === 5040` },
+      ],
+      hints: ["return n <= 1 ? 1 : n * fact(n-1);"],
+      solution: `function fact(n){ return n<=1 ? 1 : n*fact(n-1); }`,
+      quiz: [{ q: "Missing base case causes…", options: ["TypeError", "stack overflow", "undefined", "0"], answer: 1 }],
+    },
+    {
+      id: "fn-4",
+      title: "Closures: Counter",
+      emoji: "🔐",
+      difficulty: 3,
+      theory: "A closure remembers variables from its outer scope. Classic use: private state.",
+      goal: "Write `makeCounter()` that returns a function. Each call increments and returns the count starting at 1.",
+      starterCode: `function makeCounter(){\n  // return a function\n}\n`,
+      steps: [
+        { label: "First call returns 1", test: `(()=>{ const c=makeCounter(); return c()===1; })()` },
+        { label: "Increments independently", test: `(()=>{ const a=makeCounter(); const b=makeCounter(); a(); a(); return a()===3 && b()===1; })()` },
+      ],
+      hints: ["let n=0; return () => ++n;"],
+      solution: `function makeCounter(){ let n=0; return ()=> ++n; }`,
+      quiz: [{ q: "Closures capture variables by…", options: ["value at call time", "reference (live)", "deep clone", "JSON"], answer: 1 }],
+    },
+  ],
+};

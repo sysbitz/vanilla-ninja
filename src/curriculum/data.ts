@@ -1,4 +1,11 @@
 import type { Section } from "./types";
+import { functionsSection } from "./sections/functions";
+import { arraysSection } from "./sections/arrays";
+import { asyncSection } from "./sections/async";
+import { oopSection } from "./sections/oop";
+import { solidSection } from "./sections/solid";
+import { concurrencySection } from "./sections/concurrency";
+import { patternsSection } from "./sections/patterns";
 
 /**
  * Default preview shell — a centered "stage" div the student can manipulate.
@@ -399,6 +406,17 @@ export const SECTIONS: Section[] = [
     ],
   },
 ];
+
+// Append advanced sections (kept in separate files for scalability — easy to add 100+ levels).
+SECTIONS.push(
+  functionsSection,
+  arraysSection,
+  asyncSection,
+  oopSection,
+  solidSection,
+  concurrencySection,
+  patternsSection,
+);
 
 export const ALL_LEVELS = SECTIONS.flatMap(s => s.levels.map(l => ({ section: s, level: l })));
 export const TOTAL_LEVELS = ALL_LEVELS.length;
