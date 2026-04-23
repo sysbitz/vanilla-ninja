@@ -73,18 +73,27 @@ function buildSrcDoc(token: string) {
     window.__ctx = { logs: [] };
 
     const tests = data.tests || [];
-    // Build a single function: student code, then test evaluations in same scope.
-    const testBlock = tests.map(function(t, i){
-      return "try { __results.push({ label: " + JSON.stringify(t.label) +
-             ", pass: !!(" + t.test + "), hint: " + JSON.stringify(t.hint || "") + " }); } " +
+    // Each test runs inside an async IIFE so it can use await / return / multi-statement bodies.
+    // A test passes when the IIFE resolves to a truthy value (or evaluates a truthy expression).
+    const testBlock = tests.map(function(t){
+      const body = t.test || 'false';
+      // If body looks multi-statement (contains ; or return/await), run as-is; else wrap as `return (expr)`.
+      const looksStatement = /(^|\\n|;)\\s*(return |await |let |const |var |if\\s*\\(|for\\s*\\(|while\\s*\\(|try\\s*\\{)/.test(body) || /;\\s*\\S/.test(body);
+      const fnBody = looksStatement ? body : ('return (' + body + ');');
+      return "try { var __v = await (async function(){ " + fnBody + " })(); __results.push({ label: " + JSON.stringify(t.label) +
+             ", pass: !!__v, hint: " + JSON.stringify(t.hint || "") + " }); } " +
              "catch (err) { __results.push({ label: " + JSON.stringify(t.label) +
              ", pass: false, error: (err && err.message) || String(err), hint: " + JSON.stringify(t.hint || "") + " }); }";
     }).join("\\n");
 
     const wrapped =
-      "var __results = [];\\n" +
-      "try {\\n" + (data.code || "") + "\\n} catch (__e) { __results.push({ label: 'Code execution', pass: false, error: (__e && __e.message) || String(__e) }); send({ type:'log', level:'error', args:[(__e && __e.message) || String(__e)] }); }\\n" +
-      "return new Promise(function(__resolve){ setTimeout(function(){ " + testBlock + " __resolve(__results); }, 80); });";
+      "return (async function(){\\n" +
+      "  var __results = [];\\n" +
+      "  try {\\n" + (data.code || "") + "\\n} catch (__e) { __results.push({ label: 'Code execution', pass: false, error: (__e && __e.message) || String(__e) }); send({ type:'log', level:'error', args:[(__e && __e.message) || String(__e)] }); }\\n" +
+      "  await new Promise(function(r){ setTimeout(r, 80); });\\n" +
+      "  " + testBlock + "\\n" +
+      "  return __results;\\n" +
+      "})();";
 
     let results = [];
     try {
