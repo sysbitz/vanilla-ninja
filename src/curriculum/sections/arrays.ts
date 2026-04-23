@@ -1,0 +1,73 @@
+import type { Section } from "../types";
+
+export const arraysSection: Section = {
+  id: "arrays",
+  title: "Arrays & Objects",
+  emoji: "📚",
+  blurb: "map, filter, reduce, destructuring, JSON.",
+  levels: [
+    {
+      id: "arr-1",
+      title: "map() Basics",
+      emoji: "🗺️",
+      difficulty: 1,
+      theory: "`array.map(fn)` returns a new array with fn applied to each item.",
+      goal: "Given `nums = [1,2,3,4]`, build `doubled` = each item × 2 using map.",
+      starterCode: `const nums = [1,2,3,4];\n// const doubled = ...\n`,
+      steps: [
+        { label: "doubled is [2,4,6,8]", test: `JSON.stringify(doubled) === '[2,4,6,8]'` },
+      ],
+      hints: ["nums.map(n => n*2)"],
+      solution: `const nums=[1,2,3,4]; const doubled = nums.map(n=>n*2);`,
+      quiz: [{ q: "map returns…", options: ["the same array", "a new array", "undefined", "the first item"], answer: 1 }],
+    },
+    {
+      id: "arr-2",
+      title: "filter + reduce",
+      emoji: "🧮",
+      difficulty: 2,
+      theory: "`filter` keeps items matching a predicate. `reduce` collapses an array to a single value.",
+      goal: "From `nums = [3,7,2,9,4,11]`, compute `sumOfEvens` (sum of even numbers).",
+      starterCode: `const nums = [3,7,2,9,4,11];\n// const sumOfEvens = ...\n`,
+      steps: [
+        { label: "sumOfEvens === 6", test: `sumOfEvens === 6` },
+      ],
+      hints: ["nums.filter(n=>n%2===0).reduce((a,b)=>a+b,0)"],
+      solution: `const nums=[3,7,2,9,4,11]; const sumOfEvens = nums.filter(n=>n%2===0).reduce((a,b)=>a+b,0);`,
+      quiz: [{ q: "reduce's second arg is the…", options: ["index", "initial accumulator", "array length", "callback"], answer: 1 }],
+    },
+    {
+      id: "arr-3",
+      title: "Object Destructuring",
+      emoji: "📦",
+      difficulty: 2,
+      theory: "Pull keys out: `const {a, b} = obj;`. Rename: `const {a: x} = obj;`.",
+      goal: "From `user = {name:'Ada', age:36, city:'London'}`, destructure into `name`, `age` and a rest var `extra` with the remaining keys.",
+      starterCode: `const user = {name:'Ada', age:36, city:'London'};\n// const { ... } = user;\n`,
+      steps: [
+        { label: "name === 'Ada'", test: `name === 'Ada'` },
+        { label: "age === 36", test: `age === 36` },
+        { label: "extra === { city:'London' }", test: `JSON.stringify(extra) === '{"city":"London"}'` },
+      ],
+      hints: ["const { name, age, ...extra } = user;"],
+      solution: `const user={name:'Ada',age:36,city:'London'}; const { name, age, ...extra } = user;`,
+      quiz: [{ q: "Spread in arrays does…", options: ["mutates original", "shallow copies/expands", "deep clones", "sorts"], answer: 1 }],
+    },
+    {
+      id: "arr-4",
+      title: "JSON Round-Trip",
+      emoji: "🔁",
+      difficulty: 1,
+      theory: "`JSON.stringify` serializes, `JSON.parse` revives.",
+      goal: "Given `data = {ok:true, n:7}`, set `text` to its JSON string, then `back` parsed to an object.",
+      starterCode: `const data = {ok:true, n:7};\n// const text = ...\n// const back = ...\n`,
+      steps: [
+        { label: "text is JSON of data", test: `text === '{"ok":true,"n":7}'` },
+        { label: "back deep-equals data", test: `back && back.ok === true && back.n === 7` },
+      ],
+      hints: ["JSON.stringify(data); JSON.parse(text);"],
+      solution: `const data={ok:true,n:7}; const text=JSON.stringify(data); const back=JSON.parse(text);`,
+      quiz: [{ q: "JSON does NOT support…", options: ["arrays", "numbers", "functions", "booleans"], answer: 2 }],
+    },
+  ],
+};
