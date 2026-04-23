@@ -77,7 +77,7 @@ function buildSrcDoc(token: string) {
     // A test passes when the IIFE resolves to a truthy value (or evaluates a truthy expression).
     const testBlock = tests.map(function(t){
       const body = t.test || 'false';
-      // If body looks multi-statement (contains ; or return/await), run as-is; else wrap as `return (expr)`.
+      // If body looks multi-statement, run as-is; else wrap as a return expression.
       const looksStatement = /(^|\\n|;)\\s*(return |await |let |const |var |if\\s*\\(|for\\s*\\(|while\\s*\\(|try\\s*\\{)/.test(body) || /;\\s*\\S/.test(body);
       const fnBody = looksStatement ? body : ('return (' + body + ');');
       return "try { var __v = await (async function(){ " + fnBody + " })(); __results.push({ label: " + JSON.stringify(t.label) +
