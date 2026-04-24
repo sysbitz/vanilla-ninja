@@ -1,0 +1,72 @@
+import type { Section } from "../types";
+
+export const stringsSection: Section = {
+  id: "strings",
+  title: "Strings & Regex",
+  emoji: "🔤",
+  blurb: "Slice, search, replace, and pattern-match like a pro.",
+  levels: [
+    {
+      id: "str-1",
+      title: "Slice & Substring",
+      emoji: "✂️",
+      difficulty: 1,
+      theory: "`str.slice(start, end)` extracts a portion. Negative indices count from the end.",
+      goal: "From `s = 'JavaScript'`, build `head` = first 4 chars and `tail` = last 6 chars.",
+      starterCode: `const s = 'JavaScript';\n// const head = ...\n// const tail = ...\n`,
+      steps: [
+        { label: "head === 'Java'", test: `head === 'Java'` },
+        { label: "tail === 'Script'", test: `tail === 'Script'` },
+      ],
+      hints: ["s.slice(0,4); s.slice(-6);"],
+      solution: `const s='JavaScript'; const head=s.slice(0,4); const tail=s.slice(-6);`,
+      quiz: [{ q: "slice(-3) returns…", options: ["nothing", "first 3 chars", "last 3 chars", "throws"], answer: 2 }],
+    },
+    {
+      id: "str-2",
+      title: "split & join",
+      emoji: "🧵",
+      difficulty: 1,
+      theory: "`split(sep)` → array. `arr.join(sep)` → string. They are inverses.",
+      goal: "Reverse the words of `s = 'one two three'` into `reversed = 'three two one'`.",
+      starterCode: `const s = 'one two three';\n// const reversed = ...\n`,
+      steps: [
+        { label: "reversed === 'three two one'", test: `reversed === 'three two one'` },
+      ],
+      hints: ["s.split(' ').reverse().join(' ')"],
+      solution: `const s='one two three'; const reversed = s.split(' ').reverse().join(' ');`,
+      quiz: [{ q: "join with no arg uses…", options: ["space", "comma", "empty", "newline"], answer: 1 }],
+    },
+    {
+      id: "str-3",
+      title: "Regex: Test & Match",
+      emoji: "🔎",
+      difficulty: 2,
+      theory: "Regex literal: `/pattern/flags`. `.test(str)` returns boolean. `str.match(re)` returns matches.",
+      goal: "Set `hasDigit` to true if `s = 'abc123'` contains any digit. Set `digits` to the array of all digit characters.",
+      starterCode: `const s = 'abc123';\n// const hasDigit = ...\n// const digits = ...\n`,
+      steps: [
+        { label: "hasDigit === true", test: `hasDigit === true` },
+        { label: "digits is ['1','2','3']", test: `JSON.stringify(digits) === '["1","2","3"]'` },
+      ],
+      hints: ["/\\d/.test(s); s.match(/\\d/g);"],
+      solution: `const s='abc123'; const hasDigit = /\\d/.test(s); const digits = s.match(/\\d/g);`,
+      quiz: [{ q: "Flag for global match is…", options: ["i", "g", "m", "s"], answer: 1 }],
+    },
+    {
+      id: "str-4",
+      title: "Replace with Capture Groups",
+      emoji: "🪄",
+      difficulty: 3,
+      theory: "Use parentheses to capture; reference with `$1`, `$2`. Pass a function for power.",
+      goal: "Convert `'2025-04-24'` (in `date`) into `'24/04/2025'` stored in `out` using replace.",
+      starterCode: `const date = '2025-04-24';\n// const out = ...\n`,
+      steps: [
+        { label: "out === '24/04/2025'", test: `out === '24/04/2025'` },
+      ],
+      hints: ["date.replace(/(\\d{4})-(\\d{2})-(\\d{2})/, '$3/$2/$1')"],
+      solution: `const date='2025-04-24'; const out = date.replace(/(\\d{4})-(\\d{2})-(\\d{2})/, '$3/$2/$1');`,
+      quiz: [{ q: "$0 in replace refers to…", options: ["nothing", "the entire match", "first group", "the input"], answer: 1 }],
+    },
+  ],
+};
