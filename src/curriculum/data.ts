@@ -423,18 +423,25 @@ export const SECTIONS: Section[] = [
 // Append advanced sections (kept in separate files for scalability — easy to add 100+ levels).
 SECTIONS.push(
   functionsSection,
+  functionalSection,
   arraysSection,
   stringsSection,
+  advancedRegexSection,
   domAdvancedSection,
+  observersSection,
   errorsSection,
   asyncSection,
+  fetchSection,
   prototypesSection,
   oopSection,
   solidSection,
   dataStructuresSection,
+  algorithmsSection,
   modulesSection,
   concurrencySection,
   patternsSection,
+  performanceSection,
+  tddSection,
 );
 
 export const ALL_LEVELS = SECTIONS.flatMap(s => s.levels.map(l => ({ section: s, level: l })));
