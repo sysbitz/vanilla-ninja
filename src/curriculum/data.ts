@@ -6,6 +6,12 @@ import { oopSection } from "./sections/oop";
 import { solidSection } from "./sections/solid";
 import { concurrencySection } from "./sections/concurrency";
 import { patternsSection } from "./sections/patterns";
+import { stringsSection } from "./sections/strings";
+import { errorsSection } from "./sections/errors";
+import { prototypesSection } from "./sections/prototypes";
+import { modulesSection } from "./sections/modules";
+import { domAdvancedSection } from "./sections/dom-advanced";
+import { dataStructuresSection } from "./sections/data-structures";
 
 /**
  * Default preview shell — a centered "stage" div the student can manipulate.
@@ -411,9 +417,15 @@ export const SECTIONS: Section[] = [
 SECTIONS.push(
   functionsSection,
   arraysSection,
+  stringsSection,
+  domAdvancedSection,
+  errorsSection,
   asyncSection,
+  prototypesSection,
   oopSection,
   solidSection,
+  dataStructuresSection,
+  modulesSection,
   concurrencySection,
   patternsSection,
 );
