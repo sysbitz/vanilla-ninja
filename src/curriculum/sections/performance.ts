@@ -1,0 +1,73 @@
+import type { Section } from "../types";
+
+export const performanceSection: Section = {
+  id: "performance",
+  title: "Performance & Profiling",
+  emoji: "🏎️",
+  blurb: "performance.now, structuredClone, deep equality.",
+  levels: [
+    {
+      id: "perf-1",
+      title: "performance.now()",
+      emoji: "⏱️",
+      difficulty: 1,
+      theory: "`performance.now()` returns a high-resolution timestamp (ms with µs precision). Use deltas to benchmark.",
+      goal: "Measure how long `Array.from({length: 1000}, (_,i)=>i*i)` takes. Store ms in `dt` (must be >= 0).",
+      starterCode: `// const t0 = performance.now();\n// ... work ...\n// const dt = performance.now() - t0;\n`,
+      steps: [
+        { label: "dt is a finite number >= 0", test: `return typeof dt === 'number' && isFinite(dt) && dt >= 0;` },
+      ],
+      hints: ["Wrap the work between two performance.now() calls."],
+      solution: `const t0 = performance.now(); Array.from({length:1000}, (_,i)=>i*i); const dt = performance.now() - t0;`,
+      quiz: [{ q: "performance.now vs Date.now:", options: ["same precision", "performance.now is monotonic & higher-res", "Date is faster", "no difference"], answer: 1 }],
+    },
+    {
+      id: "perf-2",
+      title: "structuredClone",
+      emoji: "🧬",
+      difficulty: 2,
+      theory: "`structuredClone(obj)` performs a deep clone (handles cycles, Maps, Dates) — unlike JSON tricks.",
+      goal: "Deep-clone `src = {a:1, nested:{b:2}}` into `copy`. Mutating copy.nested.b must NOT affect src.",
+      starterCode: `const src = { a:1, nested:{ b:2 } };\n// const copy = structuredClone(src);\n// copy.nested.b = 99;\n`,
+      steps: [
+        { label: "copy is a separate object", test: `copy !== src && copy.nested !== src.nested` },
+        { label: "src.nested.b stays 2", test: `src.nested.b === 2` },
+      ],
+      hints: ["const copy = structuredClone(src); copy.nested.b = 99;"],
+      solution: `const src={a:1,nested:{b:2}}; const copy=structuredClone(src); copy.nested.b=99;`,
+      quiz: [{ q: "JSON.parse(JSON.stringify) loses…", options: ["numbers", "Dates, undefined, functions, cycles", "strings", "booleans"], answer: 1 }],
+    },
+    {
+      id: "perf-3",
+      title: "Deep Equality",
+      emoji: "🟰",
+      difficulty: 3,
+      theory: "`===` on objects compares references. For value-equality on nested data, write a recursive deepEqual.",
+      goal: "Implement `deepEqual(a, b)` for plain objects, arrays, and primitives.",
+      starterCode: `function deepEqual(a, b){\n  // recursive equality\n}\n`,
+      steps: [
+        { label: "Primitives", test: `deepEqual(1,1) && deepEqual('x','x') && !deepEqual(1,2)` },
+        { label: "Nested objects", test: `deepEqual({a:[1,{b:2}]}, {a:[1,{b:2}]}) === true` },
+        { label: "Diff detected", test: `deepEqual({a:[1,{b:2}]}, {a:[1,{b:3}]}) === false` },
+      ],
+      hints: ["If both are objects, compare keys recursively; else use ===."],
+      solution: `function deepEqual(a,b){ if(a===b) return true; if(typeof a!=='object'||a===null||typeof b!=='object'||b===null) return false; const ka=Object.keys(a), kb=Object.keys(b); if(ka.length!==kb.length) return false; return ka.every(k => deepEqual(a[k], b[k])); }`,
+      quiz: [{ q: "{} === {} is…", options: ["true", "false", "throws", "undefined"], answer: 1 }],
+    },
+    {
+      id: "perf-4",
+      title: "Lazy Evaluation with Generators",
+      emoji: "🦥",
+      difficulty: 3,
+      theory: "Generators produce values on demand — no upfront cost. Great for infinite or huge sequences.",
+      goal: "Generator `take(gen, n)` yields the first n values. `[...take(squares(), 4)]` from `function* squares(){ let i=1; while(true) yield i*i++; }` should be [1,4,9,16].",
+      starterCode: `function* squares(){ let i=1; while(true) yield i*i++; }\nfunction* take(gen, n){\n  // yield first n values\n}\n`,
+      steps: [
+        { label: "first 4 squares", test: `JSON.stringify([...take(squares(), 4)]) === '[1,4,9,16]'` },
+      ],
+      hints: ["let i=0; for(const v of gen){ if(i++>=n) return; yield v; }"],
+      solution: `function* squares(){ let i=1; while(true) yield i*i++; }\nfunction* take(gen,n){ let i=0; for(const v of gen){ if(i++>=n) return; yield v; } }`,
+      quiz: [{ q: "Lazy sequences avoid…", options: ["correctness", "computing values you don't use", "syntax errors", "imports"], answer: 1 }],
+    },
+  ],
+};
