@@ -12,6 +12,13 @@ import { prototypesSection } from "./sections/prototypes";
 import { modulesSection } from "./sections/modules";
 import { domAdvancedSection } from "./sections/dom-advanced";
 import { dataStructuresSection } from "./sections/data-structures";
+import { fetchSection } from "./sections/fetch";
+import { observersSection } from "./sections/observers";
+import { performanceSection } from "./sections/performance";
+import { advancedRegexSection } from "./sections/advanced-regex";
+import { algorithmsSection } from "./sections/algorithms";
+import { functionalSection } from "./sections/functional";
+import { tddSection } from "./sections/tdd";
 
 /**
  * Default preview shell — a centered "stage" div the student can manipulate.
