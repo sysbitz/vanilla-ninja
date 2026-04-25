@@ -32,10 +32,60 @@ type Props = {
 function buildSrcDoc(token: string) {
   return `<!doctype html><html><head><meta charset="utf-8">
 <style id="__user_css"></style>
+<style>
+  html,body{height:100%}
+  body{margin:0;font-family:'JetBrains Mono',ui-monospace,monospace;background:#0f0f17;color:#f5f5dc;overflow:hidden}
+  #__stage{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;pointer-events:none;transition:filter .3s}
+  #__stage .scene{font-size:64px;line-height:1;transition:transform .4s cubic-bezier(.34,1.56,.64,1),filter .3s}
+  #__stage.win .scene{transform:scale(1.25) rotate(-6deg);filter:drop-shadow(0 0 18px #facc15)}
+  #__stage .stars{display:flex;gap:6px;font-size:22px;opacity:.85}
+  #__stage .stars span{transition:transform .25s,filter .25s;filter:grayscale(1) opacity(.35)}
+  #__stage .stars span.on{filter:none;transform:scale(1.25);text-shadow:0 0 12px #facc15}
+  #__stage .label{font-size:11px;letter-spacing:2px;text-transform:uppercase;opacity:.6}
+  #__root{position:relative;z-index:2}
+</style>
 </head>
 <body>
+<div id="__stage"><div class="scene">🎮</div><div class="stars"></div><div class="label">run your code</div></div>
 <div id="__root"></div>
 <script>
+// Rewrite TOP-LEVEL const/let to var so declarations bind to the iframe's
+// global scope (otherwise indirect-eval keeps them inside the eval's lexical
+// environment and tests can't see user-defined names).
+function __hoistTopLevel(src){
+  let out='', depth=0, paren=0, i=0, inStr=null, inTpl=0, inLine=false, inBlock=false;
+  while(i<src.length){
+    const c=src[i], n=src[i+1];
+    if(inLine){ out+=c; if(c==='\\n')inLine=false; i++; continue; }
+    if(inBlock){ out+=c; if(c==='*'&&n==='/'){out+=n;i+=2;inBlock=false;continue;} i++; continue; }
+    if(inStr){ out+=c; if(c==='\\\\'){out+=n;i+=2;continue;} if(c===inStr)inStr=null; i++; continue; }
+    if(inTpl>0){
+      out+=c;
+      if(c==='\\\\'){out+=n;i+=2;continue;}
+      if(c==='\`'){inTpl--; i++; continue;}
+      if(c==='$'&&n==='{'){out+=n;i+=2;depth++;continue;}
+      i++; continue;
+    }
+    if(c==='/'&&n==='/'){inLine=true;out+=c;i++;continue;}
+    if(c==='/'&&n==='*'){inBlock=true;out+=c;i++;continue;}
+    if(c==='"'||c==="'"){inStr=c;out+=c;i++;continue;}
+    if(c==='\`'){inTpl++;out+=c;i++;continue;}
+    if(c==='{')depth++;
+    else if(c==='}')depth=Math.max(0,depth-1);
+    else if(c==='(')paren++;
+    else if(c===')')paren=Math.max(0,paren-1);
+    if(depth===0 && paren===0){
+      // match keyword at word boundary
+      const prev=out[out.length-1]||'\\n';
+      if(!/[A-Za-z0-9_$]/.test(prev)){
+        if(src.startsWith('const ',i)){ out+='var   '; i+=6; continue; }
+        if(src.startsWith('let ',  i)){ out+='var '; i+=4; continue; }
+      }
+    }
+    out+=c; i++;
+  }
+  return out;
+}
 (function(){
   const TOKEN = ${JSON.stringify(token)};
   const send = (msg) => parent.postMessage(Object.assign({ token: TOKEN }, msg), '*');
