@@ -12,6 +12,8 @@ import { useProgress } from "@/hooks/useProgress";
 import { celebrate } from "@/lib/confetti";
 import type { Level } from "@/curriculum/types";
 import { toast } from "sonner";
+import { useAuth } from "@/providers/AuthProvider";
+import { profileService } from "@/services/profileService";
 
 type Props = { level: Level; onAdvance?: () => void };
 
@@ -25,6 +27,7 @@ export function Challenge({ level, onAdvance }: Props) {
   const [showSolution, setShowSolution] = useState(false);
   const [quizAnswers, setQuizAnswers] = useState<number[]>(() => level.quiz.map(() => -1));
   const { get, update } = useProgress();
+  const { user, refreshProfile } = useAuth();
   const lp = get(level.id);
 
   // Reset on level change
@@ -50,9 +53,13 @@ export function Challenge({ level, onAdvance }: Props) {
     if (!fullyComplete) return;
     const stars: 1 | 2 | 3 = showSolution ? 1 : lp.attempts <= 2 ? 3 : 2;
     if (!lp.completed || stars > lp.stars) {
+      const xpGain = !lp.completed ? stars * 10 : Math.max(0, (stars - lp.stars) * 5);
       update(level.id, { completed: true, stars });
       celebrate(stars);
-      toast.success(`Level cleared — ${"⭐".repeat(stars)}`);
+      toast.success(`Level cleared — ${"⭐".repeat(stars)}${xpGain ? ` · +${xpGain} XP` : ""}`);
+      if (user && xpGain > 0) {
+        profileService.addXp(user.id, xpGain).then(() => refreshProfile()).catch(console.error);
+      }
     }
   }, [fullyComplete]); // eslint-disable-line react-hooks/exhaustive-deps
 
