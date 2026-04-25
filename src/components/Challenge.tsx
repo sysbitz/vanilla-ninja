@@ -20,6 +20,7 @@ export function Challenge({ level, onAdvance }: Props) {
   const [code, setCode] = useState(level.starterCode);
   const [logs, setLogs] = useState<LogEntry[]>([]);
   const [results, setResults] = useState<StepResult[]>([]);
+  const [manualPass, setManualPass] = useState(false);
   const [hintIdx, setHintIdx] = useState(0);
   const [showSolution, setShowSolution] = useState(false);
   const [quizAnswers, setQuizAnswers] = useState<number[]>(() => level.quiz.map(() => -1));
@@ -34,10 +35,11 @@ export function Challenge({ level, onAdvance }: Props) {
     setHintIdx(0);
     setShowSolution(false);
     setQuizAnswers(level.quiz.map(() => -1));
+    setManualPass(false);
     sandboxRef.current?.reset();
   }, [level.id]);
 
-  const allStepsPass = results.length > 0 && results.every(r => r.pass);
+  const allStepsPass = manualPass || (results.length > 0 && results.every(r => r.pass));
   const quizPass =
     level.quiz.length === 0 ||
     quizAnswers.every((a, i) => a === level.quiz[i].answer);
@@ -155,7 +157,17 @@ export function Challenge({ level, onAdvance }: Props) {
         </Card>
 
         <Card className="bg-card border-border/60 p-3">
-          <div className="text-xs font-mono uppercase tracking-wider text-muted-foreground mb-2">Steps</div>
+          <div className="flex items-center justify-between mb-2">
+            <div className="text-xs font-mono uppercase tracking-wider text-muted-foreground">Steps</div>
+            <Button
+              size="sm"
+              variant={manualPass ? "secondary" : "outline"}
+              onClick={() => setManualPass(v => !v)}
+              className="h-7 text-xs"
+            >
+              {manualPass ? "✓ Marked done" : "Mark as done"}
+            </Button>
+          </div>
           <ul className="space-y-1.5">
             {level.steps.map((s, i) => {
               const r = results[i];
