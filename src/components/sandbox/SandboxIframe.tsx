@@ -86,11 +86,11 @@ function buildSrcDoc(token: string) {
       }
     }
 
-    // Run student code first
+    // Run student code first — use indirect eval so declarations land in the iframe's global scope,
+    // which lets tests reference user-defined functions/vars by name.
     const results = [];
     try {
-      const userFn = new AsyncFn(data.code || '');
-      await userFn();
+      (0, eval)(data.code || '');
     } catch (__e) {
       results.push({ label: 'Code execution', pass: false, error: (__e && __e.message) || String(__e) });
       send({ type:'log', level:'error', args:[(__e && __e.message) || String(__e)] });
