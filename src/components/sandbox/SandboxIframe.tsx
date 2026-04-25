@@ -77,10 +77,10 @@ function buildSrcDoc(token: string) {
     // A test passes when the IIFE resolves to a truthy value (or evaluates a truthy expression).
     const testBlock = tests.map(function(t){
       const body = t.test || 'false';
-      // If body looks multi-statement, run as-is; else wrap as a return expression.
-      const looksStatement = /(^|\\n|;)\\s*(return |await |let |const |var |if\\s*\\(|for\\s*\\(|while\\s*\\(|try\\s*\\{)/.test(body) || /;\\s*\\S/.test(body);
-      const fnBody = looksStatement ? body : ('return (' + body + ');');
-      return "try { var __v = await (async function(){ " + fnBody + " })(); __results.push({ label: " + JSON.stringify(t.label) +
+      // Try to run body as a return-expression first (works for IIFEs, comparisons, calls).
+      // If that throws a SyntaxError, fall back to executing as a statement block.
+      const exprAttempt = "try { return (" + body + "); } catch (__se) { if (__se instanceof SyntaxError) { " + body + " } else { throw __se; } }";
+      return "try { var __v = await (async function(){ " + exprAttempt + " })(); __results.push({ label: " + JSON.stringify(t.label) +
              ", pass: !!__v, hint: " + JSON.stringify(t.hint || "") + " }); } " +
              "catch (err) { __results.push({ label: " + JSON.stringify(t.label) +
              ", pass: false, error: (err && err.message) || String(err), hint: " + JSON.stringify(t.hint || "") + " }); }";
