@@ -157,7 +157,17 @@ export function Challenge({ level, onAdvance }: Props) {
         </Card>
 
         <Card className="bg-card border-border/60 p-3">
-          <div className="text-xs font-mono uppercase tracking-wider text-muted-foreground mb-2">Steps</div>
+          <div className="flex items-center justify-between mb-2">
+            <div className="text-xs font-mono uppercase tracking-wider text-muted-foreground">Steps</div>
+            <Button
+              size="sm"
+              variant={manualPass ? "secondary" : "outline"}
+              onClick={() => setManualPass(v => !v)}
+              className="h-7 text-xs"
+            >
+              {manualPass ? "✓ Marked done" : "Mark as done"}
+            </Button>
+          </div>
           <ul className="space-y-1.5">
             {level.steps.map((s, i) => {
               const r = results[i];
