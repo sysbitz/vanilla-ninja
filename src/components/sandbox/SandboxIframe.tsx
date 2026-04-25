@@ -32,10 +32,60 @@ type Props = {
 function buildSrcDoc(token: string) {
   return `<!doctype html><html><head><meta charset="utf-8">
 <style id="__user_css"></style>
+<style>
+  html,body{height:100%}
+  body{margin:0;font-family:'JetBrains Mono',ui-monospace,monospace;background:#0f0f17;color:#f5f5dc;overflow:hidden}
+  #__stage{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;pointer-events:none;transition:filter .3s}
+  #__stage .scene{font-size:64px;line-height:1;transition:transform .4s cubic-bezier(.34,1.56,.64,1),filter .3s}
+  #__stage.win .scene{transform:scale(1.25) rotate(-6deg);filter:drop-shadow(0 0 18px #facc15)}
+  #__stage .stars{display:flex;gap:6px;font-size:22px;opacity:.85}
+  #__stage .stars span{transition:transform .25s,filter .25s;filter:grayscale(1) opacity(.35)}
+  #__stage .stars span.on{filter:none;transform:scale(1.25);text-shadow:0 0 12px #facc15}
+  #__stage .label{font-size:11px;letter-spacing:2px;text-transform:uppercase;opacity:.6}
+  #__root{position:relative;z-index:2}
+</style>
 </head>
 <body>
+<div id="__stage"><div class="scene">🎮</div><div class="stars"></div><div class="label">run your code</div></div>
 <div id="__root"></div>
 <script>
+// Rewrite TOP-LEVEL const/let to var so declarations bind to the iframe's
+// global scope (otherwise indirect-eval keeps them inside the eval's lexical
+// environment and tests can't see user-defined names).
+function __hoistTopLevel(src){
+  let out='', depth=0, paren=0, i=0, inStr=null, inTpl=0, inLine=false, inBlock=false;
+  while(i<src.length){
+    const c=src[i], n=src[i+1];
+    if(inLine){ out+=c; if(c==='\\n')inLine=false; i++; continue; }
+    if(inBlock){ out+=c; if(c==='*'&&n==='/'){out+=n;i+=2;inBlock=false;continue;} i++; continue; }
+    if(inStr){ out+=c; if(c==='\\\\'){out+=n;i+=2;continue;} if(c===inStr)inStr=null; i++; continue; }
+    if(inTpl>0){
+      out+=c;
+      if(c==='\\\\'){out+=n;i+=2;continue;}
+      if(c==='\`'){inTpl--; i++; continue;}
+      if(c==='$'&&n==='{'){out+=n;i+=2;depth++;continue;}
+      i++; continue;
+    }
+    if(c==='/'&&n==='/'){inLine=true;out+=c;i++;continue;}
+    if(c==='/'&&n==='*'){inBlock=true;out+=c;i++;continue;}
+    if(c==='"'||c==="'"){inStr=c;out+=c;i++;continue;}
+    if(c==='\`'){inTpl++;out+=c;i++;continue;}
+    if(c==='{')depth++;
+    else if(c==='}')depth=Math.max(0,depth-1);
+    else if(c==='(')paren++;
+    else if(c===')')paren=Math.max(0,paren-1);
+    if(depth===0 && paren===0){
+      // match keyword at word boundary
+      const prev=out[out.length-1]||'\\n';
+      if(!/[A-Za-z0-9_$]/.test(prev)){
+        if(src.startsWith('const ',i)){ out+='var   '; i+=6; continue; }
+        if(src.startsWith('let ',  i)){ out+='var '; i+=4; continue; }
+      }
+    }
+    out+=c; i++;
+  }
+  return out;
+}
 (function(){
   const TOKEN = ${JSON.stringify(token)};
   const send = (msg) => parent.postMessage(Object.assign({ token: TOKEN }, msg), '*');
@@ -63,6 +113,25 @@ function buildSrcDoc(token: string) {
     send({ type:'log', level:'error', args:['Unhandled rejection: ' + ((e.reason && e.reason.message) || e.reason)] });
   });
 
+  function renderStage(state, passed, total){
+    const stage = document.getElementById('__stage');
+    if (!stage) return;
+    const scenes = { idle:'🎮', running:'⚙️', win:'🏆', fail:'🤔', error:'💥' };
+    const labels = { idle:'run your code', running:'running…', win:'level cleared', fail:passed+' / '+total+' steps', error:'error — check console' };
+    stage.className = state==='win'?'win':'';
+    stage.querySelector('.scene').textContent = scenes[state] || '🎮';
+    stage.querySelector('.label').textContent = labels[state] || '';
+    const stars = stage.querySelector('.stars');
+    if (total > 0) {
+      const max = Math.min(total, 8);
+      let html='';
+      for (let k=0;k<max;k++) html += '<span class="'+(k<passed?'on':'')+'">★</span>';
+      stars.innerHTML = html;
+    } else {
+      stars.innerHTML = '';
+    }
+  }
+
   window.addEventListener('message', async function(ev){
     const data = ev.data || {};
     if (data.token !== TOKEN || data.type !== 'run') return;
@@ -71,6 +140,7 @@ function buildSrcDoc(token: string) {
     document.getElementById('__user_css').textContent = data.css || '';
     document.getElementById('__root').innerHTML = data.html || '';
     window.__ctx = { logs: [] };
+    renderStage('running', 0, (data.tests||[]).length);
 
     const tests = data.tests || [];
     const AsyncFn = Object.getPrototypeOf(async function(){}).constructor;
@@ -86,12 +156,15 @@ function buildSrcDoc(token: string) {
       }
     }
 
-    // Run student code first — use indirect eval so declarations land in the iframe's global scope,
-    // which lets tests reference user-defined functions/vars by name.
+    // Run student code first. Hoist top-level const/let → var so the
+    // declarations land on the iframe's global scope (so tests can read them).
     const results = [];
+    let execError = false;
     try {
-      (0, eval)(data.code || '');
+      const transformed = __hoistTopLevel(String(data.code || ''));
+      (0, eval)(transformed);
     } catch (__e) {
+      execError = true;
       results.push({ label: 'Code execution', pass: false, error: (__e && __e.message) || String(__e) });
       send({ type:'log', level:'error', args:[(__e && __e.message) || String(__e)] });
     }
@@ -113,7 +186,10 @@ function buildSrcDoc(token: string) {
         results.push({ label: t.label, pass: false, error: (err && err.message) || String(err), hint: t.hint || '' });
       }
     }
-    send({ type:'result', ok: results.every(function(r){ return r.pass; }), results: results });
+    const passed = results.filter(function(r){return r.pass}).length;
+    const ok = results.length>0 && results.every(function(r){ return r.pass; });
+    renderStage(execError?'error':(ok?'win':'fail'), passed, tests.length);
+    send({ type:'result', ok: ok, results: results });
   });
 
   send({ type:'ready' });
