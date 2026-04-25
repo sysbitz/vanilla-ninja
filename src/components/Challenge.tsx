@@ -35,10 +35,11 @@ export function Challenge({ level, onAdvance }: Props) {
     setHintIdx(0);
     setShowSolution(false);
     setQuizAnswers(level.quiz.map(() => -1));
+    setManualPass(false);
     sandboxRef.current?.reset();
   }, [level.id]);
 
-  const allStepsPass = results.length > 0 && results.every(r => r.pass);
+  const allStepsPass = manualPass || (results.length > 0 && results.every(r => r.pass));
   const quizPass =
     level.quiz.length === 0 ||
     quizAnswers.every((a, i) => a === level.quiz[i].answer);
