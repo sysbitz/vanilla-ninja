@@ -113,6 +113,25 @@ function __hoistTopLevel(src){
     send({ type:'log', level:'error', args:['Unhandled rejection: ' + ((e.reason && e.reason.message) || e.reason)] });
   });
 
+  function renderStage(state, passed, total){
+    const stage = document.getElementById('__stage');
+    if (!stage) return;
+    const scenes = { idle:'🎮', running:'⚙️', win:'🏆', fail:'🤔', error:'💥' };
+    const labels = { idle:'run your code', running:'running…', win:'level cleared', fail:passed+' / '+total+' steps', error:'error — check console' };
+    stage.className = state==='win'?'win':'';
+    stage.querySelector('.scene').textContent = scenes[state] || '🎮';
+    stage.querySelector('.label').textContent = labels[state] || '';
+    const stars = stage.querySelector('.stars');
+    if (total > 0) {
+      const max = Math.min(total, 8);
+      let html='';
+      for (let k=0;k<max;k++) html += '<span class="'+(k<passed?'on':'')+'">★</span>';
+      stars.innerHTML = html;
+    } else {
+      stars.innerHTML = '';
+    }
+  }
+
   window.addEventListener('message', async function(ev){
     const data = ev.data || {};
     if (data.token !== TOKEN || data.type !== 'run') return;
@@ -121,6 +140,7 @@ function __hoistTopLevel(src){
     document.getElementById('__user_css').textContent = data.css || '';
     document.getElementById('__root').innerHTML = data.html || '';
     window.__ctx = { logs: [] };
+    renderStage('running', 0, (data.tests||[]).length);
 
     const tests = data.tests || [];
     const AsyncFn = Object.getPrototypeOf(async function(){}).constructor;
@@ -136,12 +156,15 @@ function __hoistTopLevel(src){
       }
     }
 
-    // Run student code first — use indirect eval so declarations land in the iframe's global scope,
-    // which lets tests reference user-defined functions/vars by name.
+    // Run student code first. Hoist top-level const/let → var so the
+    // declarations land on the iframe's global scope (so tests can read them).
     const results = [];
+    let execError = false;
     try {
-      (0, eval)(data.code || '');
+      const transformed = __hoistTopLevel(String(data.code || ''));
+      (0, eval)(transformed);
     } catch (__e) {
+      execError = true;
       results.push({ label: 'Code execution', pass: false, error: (__e && __e.message) || String(__e) });
       send({ type:'log', level:'error', args:[(__e && __e.message) || String(__e)] });
     }
@@ -163,7 +186,10 @@ function __hoistTopLevel(src){
         results.push({ label: t.label, pass: false, error: (err && err.message) || String(err), hint: t.hint || '' });
       }
     }
-    send({ type:'result', ok: results.every(function(r){ return r.pass; }), results: results });
+    const passed = results.filter(function(r){return r.pass}).length;
+    const ok = results.length>0 && results.every(function(r){ return r.pass; });
+    renderStage(execError?'error':(ok?'win':'fail'), passed, tests.length);
+    send({ type:'result', ok: ok, results: results });
   });
 
   send({ type:'ready' });
