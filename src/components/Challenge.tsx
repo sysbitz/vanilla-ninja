@@ -20,6 +20,7 @@ export function Challenge({ level, onAdvance }: Props) {
   const [code, setCode] = useState(level.starterCode);
   const [logs, setLogs] = useState<LogEntry[]>([]);
   const [results, setResults] = useState<StepResult[]>([]);
+  const [manualPass, setManualPass] = useState(false);
   const [hintIdx, setHintIdx] = useState(0);
   const [showSolution, setShowSolution] = useState(false);
   const [quizAnswers, setQuizAnswers] = useState<number[]>(() => level.quiz.map(() => -1));
