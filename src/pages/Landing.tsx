@@ -71,7 +71,10 @@ export default function Landing() {
               </Link>
             </Button>
             <Button asChild variant="outline" size="lg" className="h-12 px-6">
-              <a href="#sections">Browse curriculum</a>
+              <Link to="/register">Create free account</Link>
+            </Button>
+            <Button asChild variant="ghost" size="lg" className="h-12 px-6">
+              <Link to="/login">Log in</Link>
             </Button>
           </div>
           {completedCount > 0 && (
