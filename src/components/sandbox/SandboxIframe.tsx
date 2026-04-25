@@ -73,34 +73,45 @@ function buildSrcDoc(token: string) {
     window.__ctx = { logs: [] };
 
     const tests = data.tests || [];
-    // Each test runs inside an async IIFE so it can use await / return / multi-statement bodies.
-    // A test passes when the IIFE resolves to a truthy value (or evaluates a truthy expression).
-    const testBlock = tests.map(function(t){
-      const body = t.test || 'false';
-      // Try to run body as a return-expression first (works for IIFEs, comparisons, calls).
-      // If that throws a SyntaxError, fall back to executing as a statement block.
-      const exprAttempt = "try { return (" + body + "); } catch (__se) { if (__se instanceof SyntaxError) { " + body + " } else { throw __se; } }";
-      return "try { var __v = await (async function(){ " + exprAttempt + " })(); __results.push({ label: " + JSON.stringify(t.label) +
-             ", pass: !!__v, hint: " + JSON.stringify(t.hint || "") + " }); } " +
-             "catch (err) { __results.push({ label: " + JSON.stringify(t.label) +
-             ", pass: false, error: (err && err.message) || String(err), hint: " + JSON.stringify(t.hint || "") + " }); }";
-    }).join("\\n");
+    const AsyncFn = Object.getPrototypeOf(async function(){}).constructor;
 
-    const wrapped =
-      "return (async function(){\\n" +
-      "  var __results = [];\\n" +
-      "  try {\\n" + (data.code || "") + "\\n} catch (__e) { __results.push({ label: 'Code execution', pass: false, error: (__e && __e.message) || String(__e) }); send({ type:'log', level:'error', args:[(__e && __e.message) || String(__e)] }); }\\n" +
-      "  await new Promise(function(r){ setTimeout(r, 80); });\\n" +
-      "  " + testBlock + "\\n" +
-      "  return __results;\\n" +
-      "})();";
+    // Compile each test separately. Try expression form first; on SyntaxError, fall back to statements.
+    function compileTest(body){
+      try { return new AsyncFn('return (' + body + ');'); }
+      catch (e) {
+        if (e instanceof SyntaxError) {
+          try { return new AsyncFn(body); } catch (_) { return null; }
+        }
+        return null;
+      }
+    }
 
-    let results = [];
+    // Run student code first
+    const results = [];
     try {
-      const fn = new Function('send', wrapped);
-      results = await fn(send);
-    } catch (err) {
-      results = [{ label: 'Setup', pass: false, error: (err && err.message) || String(err) }];
+      const userFn = new AsyncFn(data.code || '');
+      await userFn();
+    } catch (__e) {
+      results.push({ label: 'Code execution', pass: false, error: (__e && __e.message) || String(__e) });
+      send({ type:'log', level:'error', args:[(__e && __e.message) || String(__e)] });
+    }
+
+    // Give DOM/microtasks a moment
+    await new Promise(function(r){ setTimeout(r, 80); });
+
+    for (let i = 0; i < tests.length; i++) {
+      const t = tests[i];
+      const fn = compileTest(t.test || 'false');
+      if (!fn) {
+        results.push({ label: t.label, pass: false, error: 'Test compile error', hint: t.hint || '' });
+        continue;
+      }
+      try {
+        const v = await fn();
+        results.push({ label: t.label, pass: !!v, hint: t.hint || '' });
+      } catch (err) {
+        results.push({ label: t.label, pass: false, error: (err && err.message) || String(err), hint: t.hint || '' });
+      }
     }
     send({ type:'result', ok: results.every(function(r){ return r.pass; }), results: results });
   });
