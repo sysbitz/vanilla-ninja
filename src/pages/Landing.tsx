@@ -114,33 +114,39 @@ export default function Landing() {
       </section>
 
       {/* Pillars */}
-      <section className="container mx-auto px-6 py-12 grid grid-cols-1 md:grid-cols-3 gap-4">
+      <section className="container mx-auto px-6 py-12 grid grid-cols-1 md:grid-cols-3 gap-4" aria-labelledby="why-heading">
+        <h2 id="why-heading" className="sr-only">Why JS Quest</h2>
         {[
-          { icon: Code2, title: "Pure Vanilla JS", body: "Every challenge teaches plain JS — no React, no jQuery, no shortcuts." },
-          { icon: Zap, title: "Instant Feedback", body: "Sandboxed iframe runs your code on every Run. Multi-step grader points to exactly what failed." },
-          { icon: Trophy, title: "Earn Stars", body: "1–3 stars per level based on attempts. Confetti, progress, and unlockable sections." },
+          { icon: Code2, title: "Full Front-end Stack", body: "HTML semantics, modern CSS (Flexbox, Grid, animations) and vanilla JavaScript — taught the same way." },
+          { icon: Zap, title: "Instant Visual Feedback", body: "Each challenge runs in a sandboxed iframe. See frogs hop, plots water and boxes spin the moment you hit Run." },
+          { icon: Trophy, title: "Earn Stars & XP", body: "1–3 stars per level based on attempts. Sign in to sync progress, level up your profile and pick up where you left off." },
         ].map(({ icon: Icon, title, body }) => (
-          <div key={title} className="glass rounded-xl p-5 hover:border-primary/40 transition-colors">
-            <Icon className="h-6 w-6 text-primary mb-3" />
+          <article key={title} className="glass rounded-xl p-5 hover:border-primary/40 transition-colors">
+            <Icon className="h-6 w-6 text-primary mb-3" aria-hidden="true" />
             <h3 className="font-bold mb-1">{title}</h3>
             <p className="text-sm text-muted-foreground">{body}</p>
-          </div>
+          </article>
         ))}
       </section>
 
       {/* Sections grid */}
-      <section id="sections" className="container mx-auto px-6 py-12">
-        <h2 className="text-3xl font-bold mb-8 flex items-center gap-2">
-          <Sparkles className="h-6 w-6 text-primary" /> Curriculum
+      <section id="sections" className="container mx-auto px-6 py-12" aria-labelledby="curriculum-heading">
+        <h2 id="curriculum-heading" className="text-3xl font-bold mb-2 flex items-center gap-2">
+          <Sparkles className="h-6 w-6 text-primary" aria-hidden="true" /> Curriculum
         </h2>
+        <p className="text-muted-foreground mb-8 max-w-2xl">
+          {SECTIONS.length} sections, {ALL_LEVELS.length} levels — start with markup &amp; styling,
+          then graduate into the deep end of JavaScript.
+        </p>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {SECTIONS.map((s) => (
             <Link
               key={s.id}
               to={`/learn/${s.levels[0].id}`}
               className="group glass rounded-xl p-5 hover:border-primary/60 hover:shadow-glow-primary transition-all"
+              aria-label={`Start ${s.title}`}
             >
-              <div className="text-4xl mb-3 group-hover:scale-110 transition-transform">{s.emoji}</div>
+              <div className="text-4xl mb-3 group-hover:scale-110 transition-transform" aria-hidden="true">{s.emoji}</div>
               <h3 className="font-bold text-lg mb-1">{s.title}</h3>
               <p className="text-sm text-muted-foreground mb-3">{s.blurb}</p>
               <div className="text-xs font-mono text-primary">{s.levels.length} levels →</div>
@@ -150,7 +156,7 @@ export default function Landing() {
       </section>
 
       <footer className="border-t border-border/60 mt-16 py-8 text-center text-xs text-muted-foreground font-mono">
-        Built with vanilla JS love. No frameworks were harmed in your learning.
+        Built with vanilla HTML, CSS &amp; JS love. No frameworks were harmed in your learning.
       </footer>
     </div>
   );
