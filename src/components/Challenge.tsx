@@ -137,7 +137,7 @@ export function Challenge({ level, onAdvance }: Props) {
             <CodeMirror
               value={code}
               onChange={setCode}
-              extensions={[javascript({ jsx: false })]}
+              extensions={[editorExtension]}
               theme={oneDark}
               height="100%"
               basicSetup={{ lineNumbers: true, foldGutter: true, highlightActiveLine: true }}
