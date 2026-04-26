@@ -27,17 +27,43 @@ export default function Landing() {
   return (
     <div ref={heroRef} className="min-h-screen">
       <Helmet>
-        <title>JS Quest — Learn JS with Fun Game | Interactive Vanilla JavaScript Course</title>
-        <meta name="description" content="Master vanilla JavaScript through 80+ interactive, gamified challenges. Learn variables, DOM, events, async, and OOP by writing real code in a sandboxed playground." />
-        <link rel="canonical" href="/" />
-        <meta property="og:title" content="JS Quest — Learn JS with Fun Game" />
-        <meta property="og:description" content="Gamified, hands-on vanilla JavaScript challenges from beginner to advanced." />
+        <title>JS Quest — Learn HTML, CSS & JavaScript by Playing</title>
+        <meta
+          name="description"
+          content="Master HTML, CSS and vanilla JavaScript through 100+ gamified, interactive challenges. Hop frogs with Flexbox, water plots with Grid, animate boxes with keyframes — all in your browser."
+        />
+        <meta
+          name="keywords"
+          content="learn html, learn css, learn javascript, flexbox game, grid garden, css animation tutorial, vanilla js course, interactive coding, web development for beginners"
+        />
+        <link rel="canonical" href="https://js-gamified.lovable.app/" />
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content="JS Quest — Learn HTML, CSS & JavaScript by Playing" />
+        <meta
+          property="og:description"
+          content="Hands-on web-dev playground: HTML, CSS, Flexbox, Grid, animations and vanilla JavaScript. Write real code, see it run instantly, earn stars."
+        />
+        <meta property="og:url" content="https://js-gamified.lovable.app/" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="JS Quest — Learn HTML, CSS & JavaScript by Playing" />
+        <meta
+          name="twitter:description"
+          content="100+ visual, gamified challenges covering HTML, CSS, Flexbox, Grid, animations and vanilla JS."
+        />
         <script type="application/ld+json">{JSON.stringify({
           "@context": "https://schema.org",
           "@type": "Course",
-          "name": "JS Quest — Learn JavaScript with Fun Game",
-          "description": "Interactive, gamified vanilla JavaScript curriculum.",
-          "provider": { "@type": "Organization", "name": "JS Quest" }
+          "name": "JS Quest — Learn HTML, CSS & JavaScript by Playing",
+          "description":
+            "An interactive, gamified curriculum covering HTML semantics, modern CSS (Flexbox, Grid, animations) and vanilla JavaScript from variables to async, OOP and patterns.",
+          "provider": { "@type": "Organization", "name": "JS Quest", "url": "https://js-gamified.lovable.app/" },
+          "educationalLevel": "Beginner to Advanced",
+          "teaches": ["HTML", "CSS", "Flexbox", "CSS Grid", "CSS Animations", "JavaScript", "DOM", "Async/Await", "OOP"],
+          "hasCourseInstance": {
+            "@type": "CourseInstance",
+            "courseMode": "online",
+            "inLanguage": "en"
+          }
         })}</script>
       </Helmet>
 
@@ -45,28 +71,30 @@ export default function Landing() {
       <section className="relative overflow-hidden">
         <div className="absolute inset-0 grid-bg opacity-30 pointer-events-none" />
         <div className="container mx-auto px-6 pt-24 pb-20 relative">
-          <div className="flex justify-center gap-6 mb-8 text-6xl">
+          <div className="flex justify-center gap-6 mb-8 text-6xl" aria-hidden="true">
+            <span className="float-emoji">🧱</span>
+            <span className="float-emoji">🎨</span>
             <span className="float-emoji">🐸</span>
+            <span className="float-emoji">🥕</span>
             <span className="float-emoji">⚡</span>
-            <span className="float-emoji">🟨</span>
-            <span className="float-emoji">🎯</span>
             <span className="float-emoji">🚀</span>
           </div>
           <h1 className="hero-title text-5xl md:text-7xl font-black text-center leading-[1.05] max-w-4xl mx-auto">
             <span className="inline-block">Learn </span>{" "}
+            <span className="inline-block gradient-text">HTML, CSS</span>{" "}
+            <span className="inline-block">&amp; </span>{" "}
             <span className="inline-block gradient-text">JavaScript</span>{" "}
-            <span className="inline-block">with </span>{" "}
-            <span className="inline-block">a </span>{" "}
-            <span className="inline-block">Fun </span>{" "}
-            <span className="inline-block gradient-text">Game</span>
+            <span className="inline-block">by </span>{" "}
+            <span className="inline-block">Playing</span>
           </h1>
           <p className="hero-sub text-center text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mt-6">
-            80+ bite-sized, gamified challenges. Pure vanilla JS — no frameworks, no fluff.
-            Write real code, watch frogs jump, balls bounce, grids glow.
+            One playground for the full front-end stack. {ALL_LEVELS.length}+ bite-sized
+            challenges — hop frogs with Flexbox, water vegetables with Grid, animate
+            boxes with keyframes, then ship real vanilla JS. No frameworks, no fluff.
           </p>
           <div className="hero-cta flex flex-wrap items-center justify-center gap-3 mt-10">
             <Button asChild size="lg" className="bg-gradient-primary text-primary-foreground shadow-glow-primary text-base h-12 px-6">
-              <Link to={`/learn/${firstLevel}`}>
+              <Link to={`/learn/${firstLevel}`} aria-label={completedCount > 0 ? "Continue your quest" : "Start playing"}>
                 {completedCount > 0 ? "Continue your quest" : "Start playing"} <ArrowRight className="ml-2 h-4 w-4" />
               </Link>
             </Button>
@@ -86,33 +114,39 @@ export default function Landing() {
       </section>
 
       {/* Pillars */}
-      <section className="container mx-auto px-6 py-12 grid grid-cols-1 md:grid-cols-3 gap-4">
+      <section className="container mx-auto px-6 py-12 grid grid-cols-1 md:grid-cols-3 gap-4" aria-labelledby="why-heading">
+        <h2 id="why-heading" className="sr-only">Why JS Quest</h2>
         {[
-          { icon: Code2, title: "Pure Vanilla JS", body: "Every challenge teaches plain JS — no React, no jQuery, no shortcuts." },
-          { icon: Zap, title: "Instant Feedback", body: "Sandboxed iframe runs your code on every Run. Multi-step grader points to exactly what failed." },
-          { icon: Trophy, title: "Earn Stars", body: "1–3 stars per level based on attempts. Confetti, progress, and unlockable sections." },
+          { icon: Code2, title: "Full Front-end Stack", body: "HTML semantics, modern CSS (Flexbox, Grid, animations) and vanilla JavaScript — taught the same way." },
+          { icon: Zap, title: "Instant Visual Feedback", body: "Each challenge runs in a sandboxed iframe. See frogs hop, plots water and boxes spin the moment you hit Run." },
+          { icon: Trophy, title: "Earn Stars & XP", body: "1–3 stars per level based on attempts. Sign in to sync progress, level up your profile and pick up where you left off." },
         ].map(({ icon: Icon, title, body }) => (
-          <div key={title} className="glass rounded-xl p-5 hover:border-primary/40 transition-colors">
-            <Icon className="h-6 w-6 text-primary mb-3" />
+          <article key={title} className="glass rounded-xl p-5 hover:border-primary/40 transition-colors">
+            <Icon className="h-6 w-6 text-primary mb-3" aria-hidden="true" />
             <h3 className="font-bold mb-1">{title}</h3>
             <p className="text-sm text-muted-foreground">{body}</p>
-          </div>
+          </article>
         ))}
       </section>
 
       {/* Sections grid */}
-      <section id="sections" className="container mx-auto px-6 py-12">
-        <h2 className="text-3xl font-bold mb-8 flex items-center gap-2">
-          <Sparkles className="h-6 w-6 text-primary" /> Curriculum
+      <section id="sections" className="container mx-auto px-6 py-12" aria-labelledby="curriculum-heading">
+        <h2 id="curriculum-heading" className="text-3xl font-bold mb-2 flex items-center gap-2">
+          <Sparkles className="h-6 w-6 text-primary" aria-hidden="true" /> Curriculum
         </h2>
+        <p className="text-muted-foreground mb-8 max-w-2xl">
+          {SECTIONS.length} sections, {ALL_LEVELS.length} levels — start with markup &amp; styling,
+          then graduate into the deep end of JavaScript.
+        </p>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {SECTIONS.map((s) => (
             <Link
               key={s.id}
               to={`/learn/${s.levels[0].id}`}
               className="group glass rounded-xl p-5 hover:border-primary/60 hover:shadow-glow-primary transition-all"
+              aria-label={`Start ${s.title}`}
             >
-              <div className="text-4xl mb-3 group-hover:scale-110 transition-transform">{s.emoji}</div>
+              <div className="text-4xl mb-3 group-hover:scale-110 transition-transform" aria-hidden="true">{s.emoji}</div>
               <h3 className="font-bold text-lg mb-1">{s.title}</h3>
               <p className="text-sm text-muted-foreground mb-3">{s.blurb}</p>
               <div className="text-xs font-mono text-primary">{s.levels.length} levels →</div>
@@ -122,7 +156,7 @@ export default function Landing() {
       </section>
 
       <footer className="border-t border-border/60 mt-16 py-8 text-center text-xs text-muted-foreground font-mono">
-        Built with vanilla JS love. No frameworks were harmed in your learning.
+        Built with vanilla HTML, CSS &amp; JS love. No frameworks were harmed in your learning.
       </footer>
     </div>
   );
