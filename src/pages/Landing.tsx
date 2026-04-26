@@ -27,17 +27,43 @@ export default function Landing() {
   return (
     <div ref={heroRef} className="min-h-screen">
       <Helmet>
-        <title>JS Quest — Learn JS with Fun Game | Interactive Vanilla JavaScript Course</title>
-        <meta name="description" content="Master vanilla JavaScript through 80+ interactive, gamified challenges. Learn variables, DOM, events, async, and OOP by writing real code in a sandboxed playground." />
-        <link rel="canonical" href="/" />
-        <meta property="og:title" content="JS Quest — Learn JS with Fun Game" />
-        <meta property="og:description" content="Gamified, hands-on vanilla JavaScript challenges from beginner to advanced." />
+        <title>JS Quest — Learn HTML, CSS & JavaScript by Playing</title>
+        <meta
+          name="description"
+          content="Master HTML, CSS and vanilla JavaScript through 100+ gamified, interactive challenges. Hop frogs with Flexbox, water plots with Grid, animate boxes with keyframes — all in your browser."
+        />
+        <meta
+          name="keywords"
+          content="learn html, learn css, learn javascript, flexbox game, grid garden, css animation tutorial, vanilla js course, interactive coding, web development for beginners"
+        />
+        <link rel="canonical" href="https://js-gamified.lovable.app/" />
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content="JS Quest — Learn HTML, CSS & JavaScript by Playing" />
+        <meta
+          property="og:description"
+          content="Hands-on web-dev playground: HTML, CSS, Flexbox, Grid, animations and vanilla JavaScript. Write real code, see it run instantly, earn stars."
+        />
+        <meta property="og:url" content="https://js-gamified.lovable.app/" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="JS Quest — Learn HTML, CSS & JavaScript by Playing" />
+        <meta
+          name="twitter:description"
+          content="100+ visual, gamified challenges covering HTML, CSS, Flexbox, Grid, animations and vanilla JS."
+        />
         <script type="application/ld+json">{JSON.stringify({
           "@context": "https://schema.org",
           "@type": "Course",
-          "name": "JS Quest — Learn JavaScript with Fun Game",
-          "description": "Interactive, gamified vanilla JavaScript curriculum.",
-          "provider": { "@type": "Organization", "name": "JS Quest" }
+          "name": "JS Quest — Learn HTML, CSS & JavaScript by Playing",
+          "description":
+            "An interactive, gamified curriculum covering HTML semantics, modern CSS (Flexbox, Grid, animations) and vanilla JavaScript from variables to async, OOP and patterns.",
+          "provider": { "@type": "Organization", "name": "JS Quest", "url": "https://js-gamified.lovable.app/" },
+          "educationalLevel": "Beginner to Advanced",
+          "teaches": ["HTML", "CSS", "Flexbox", "CSS Grid", "CSS Animations", "JavaScript", "DOM", "Async/Await", "OOP"],
+          "hasCourseInstance": {
+            "@type": "CourseInstance",
+            "courseMode": "online",
+            "inLanguage": "en"
+          }
         })}</script>
       </Helmet>
 
@@ -45,28 +71,30 @@ export default function Landing() {
       <section className="relative overflow-hidden">
         <div className="absolute inset-0 grid-bg opacity-30 pointer-events-none" />
         <div className="container mx-auto px-6 pt-24 pb-20 relative">
-          <div className="flex justify-center gap-6 mb-8 text-6xl">
+          <div className="flex justify-center gap-6 mb-8 text-6xl" aria-hidden="true">
+            <span className="float-emoji">🧱</span>
+            <span className="float-emoji">🎨</span>
             <span className="float-emoji">🐸</span>
+            <span className="float-emoji">🥕</span>
             <span className="float-emoji">⚡</span>
-            <span className="float-emoji">🟨</span>
-            <span className="float-emoji">🎯</span>
             <span className="float-emoji">🚀</span>
           </div>
           <h1 className="hero-title text-5xl md:text-7xl font-black text-center leading-[1.05] max-w-4xl mx-auto">
             <span className="inline-block">Learn </span>{" "}
+            <span className="inline-block gradient-text">HTML, CSS</span>{" "}
+            <span className="inline-block">&amp; </span>{" "}
             <span className="inline-block gradient-text">JavaScript</span>{" "}
-            <span className="inline-block">with </span>{" "}
-            <span className="inline-block">a </span>{" "}
-            <span className="inline-block">Fun </span>{" "}
-            <span className="inline-block gradient-text">Game</span>
+            <span className="inline-block">by </span>{" "}
+            <span className="inline-block">Playing</span>
           </h1>
           <p className="hero-sub text-center text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mt-6">
-            80+ bite-sized, gamified challenges. Pure vanilla JS — no frameworks, no fluff.
-            Write real code, watch frogs jump, balls bounce, grids glow.
+            One playground for the full front-end stack. {ALL_LEVELS.length}+ bite-sized
+            challenges — hop frogs with Flexbox, water vegetables with Grid, animate
+            boxes with keyframes, then ship real vanilla JS. No frameworks, no fluff.
           </p>
           <div className="hero-cta flex flex-wrap items-center justify-center gap-3 mt-10">
             <Button asChild size="lg" className="bg-gradient-primary text-primary-foreground shadow-glow-primary text-base h-12 px-6">
-              <Link to={`/learn/${firstLevel}`}>
+              <Link to={`/learn/${firstLevel}`} aria-label={completedCount > 0 ? "Continue your quest" : "Start playing"}>
                 {completedCount > 0 ? "Continue your quest" : "Start playing"} <ArrowRight className="ml-2 h-4 w-4" />
               </Link>
             </Button>
