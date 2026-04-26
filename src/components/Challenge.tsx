@@ -1,6 +1,8 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import CodeMirror from "@uiw/react-codemirror";
 import { javascript } from "@codemirror/lang-javascript";
+import { css as cssLang } from "@codemirror/lang-css";
+import { html as htmlLang } from "@codemirror/lang-html";
 import { oneDark } from "@codemirror/theme-one-dark";
 import { Play, RefreshCw, Lightbulb, Eye, Check, X, Star, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -63,16 +65,27 @@ export function Challenge({ level, onAdvance }: Props) {
     }
   }, [fullyComplete]); // eslint-disable-line react-hooks/exhaustive-deps
 
+  const lang = level.language ?? "js";
+  const editorExtension = useMemo(() => {
+    if (lang === "css") return cssLang();
+    if (lang === "html") return htmlLang();
+    return javascript({ jsx: false });
+  }, [lang]);
+  const editorFileLabel = lang === "css" ? "styles.css" : lang === "html" ? "markup.html" : "script.js";
+
   const run = () => {
     setLogs([]);
     setResults([]);
     update(level.id, { attempts: lp.attempts + 1 });
-    sandboxRef.current?.run({
-      html: level.previewHtml,
-      css: level.previewCss,
-      code,
-      tests: level.steps,
-    });
+    // Route the editor content based on language. CSS/HTML levels send the
+    // user's code into the sandbox's <style> / preview HTML and run no JS.
+    const payload =
+      lang === "css"
+        ? { html: level.previewHtml, css: `${level.previewCss ?? ""}\n${code}`, code: "", tests: level.steps }
+        : lang === "html"
+        ? { html: code, css: level.previewCss, code: "", tests: level.steps }
+        : { html: level.previewHtml, css: level.previewCss, code, tests: level.steps };
+    sandboxRef.current?.run(payload);
   };
 
   return (
@@ -100,7 +113,7 @@ export function Challenge({ level, onAdvance }: Props) {
 
         <Card className="bg-card border-border/60 flex-1 flex flex-col min-h-0 overflow-hidden">
           <div className="flex items-center justify-between border-b border-border/60 px-3 py-2">
-            <span className="text-xs font-mono text-muted-foreground uppercase tracking-wider">script.js</span>
+            <span className="text-xs font-mono text-muted-foreground uppercase tracking-wider">{editorFileLabel}</span>
             <div className="flex gap-2">
               <Button size="sm" variant="ghost" onClick={() => setCode(level.starterCode)}>
                 <RefreshCw className="h-3.5 w-3.5" />
@@ -124,7 +137,7 @@ export function Challenge({ level, onAdvance }: Props) {
             <CodeMirror
               value={code}
               onChange={setCode}
-              extensions={[javascript({ jsx: false })]}
+              extensions={[editorExtension]}
               theme={oneDark}
               height="100%"
               basicSetup={{ lineNumbers: true, foldGutter: true, highlightActiveLine: true }}

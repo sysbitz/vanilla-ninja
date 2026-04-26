@@ -19,6 +19,11 @@ import { advancedRegexSection } from "./sections/advanced-regex";
 import { algorithmsSection } from "./sections/algorithms";
 import { functionalSection } from "./sections/functional";
 import { tddSection } from "./sections/tdd";
+import { htmlBasicsSection } from "./sections/html-basics";
+import { cssBasicsSection } from "./sections/css-basics";
+import { flexboxFroggerSection } from "./sections/flexbox-frogger";
+import { gridGardenSection } from "./sections/grid-garden";
+import { cssAnimationsSection } from "./sections/css-animations";
 
 /**
  * Default preview shell — a centered "stage" div the student can manipulate.
@@ -422,6 +427,13 @@ export const SECTIONS: Section[] = [
 
 // Append advanced sections (kept in separate files for scalability — easy to add 100+ levels).
 SECTIONS.push(
+  // ── HTML & CSS track (visual, game-like) ──
+  htmlBasicsSection,
+  cssBasicsSection,
+  flexboxFroggerSection,
+  gridGardenSection,
+  cssAnimationsSection,
+  // ── JS track ──
   functionsSection,
   functionalSection,
   arraysSection,
