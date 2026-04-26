@@ -25,6 +25,9 @@ export type Level = {
   title: string;
   emoji: string;
   difficulty: 1 | 2 | 3;
+  /** Editor language. Defaults to 'js'. CSS/HTML levels send the editor content
+   *  into the sandbox's <style> / preview HTML respectively. */
+  language?: "js" | "css" | "html";
   theory: string; // markdown-ish (rendered as plain styled text + code blocks)
   goal: string;
   starterCode: string;
