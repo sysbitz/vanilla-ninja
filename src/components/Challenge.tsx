@@ -113,7 +113,7 @@ export function Challenge({ level, onAdvance }: Props) {
 
         <Card className="bg-card border-border/60 flex-1 flex flex-col min-h-0 overflow-hidden">
           <div className="flex items-center justify-between border-b border-border/60 px-3 py-2">
-            <span className="text-xs font-mono text-muted-foreground uppercase tracking-wider">script.js</span>
+            <span className="text-xs font-mono text-muted-foreground uppercase tracking-wider">{editorFileLabel}</span>
             <div className="flex gap-2">
               <Button size="sm" variant="ghost" onClick={() => setCode(level.starterCode)}>
                 <RefreshCw className="h-3.5 w-3.5" />
