@@ -1,6 +1,8 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import CodeMirror from "@uiw/react-codemirror";
 import { javascript } from "@codemirror/lang-javascript";
+import { css as cssLang } from "@codemirror/lang-css";
+import { html as htmlLang } from "@codemirror/lang-html";
 import { oneDark } from "@codemirror/theme-one-dark";
 import { Play, RefreshCw, Lightbulb, Eye, Check, X, Star, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
