@@ -65,16 +65,27 @@ export function Challenge({ level, onAdvance }: Props) {
     }
   }, [fullyComplete]); // eslint-disable-line react-hooks/exhaustive-deps
 
+  const lang = level.language ?? "js";
+  const editorExtension = useMemo(() => {
+    if (lang === "css") return cssLang();
+    if (lang === "html") return htmlLang();
+    return javascript({ jsx: false });
+  }, [lang]);
+  const editorFileLabel = lang === "css" ? "styles.css" : lang === "html" ? "markup.html" : "script.js";
+
   const run = () => {
     setLogs([]);
     setResults([]);
     update(level.id, { attempts: lp.attempts + 1 });
-    sandboxRef.current?.run({
-      html: level.previewHtml,
-      css: level.previewCss,
-      code,
-      tests: level.steps,
-    });
+    // Route the editor content based on language. CSS/HTML levels send the
+    // user's code into the sandbox's <style> / preview HTML and run no JS.
+    const payload =
+      lang === "css"
+        ? { html: level.previewHtml, css: `${level.previewCss ?? ""}\n${code}`, code: "", tests: level.steps }
+        : lang === "html"
+        ? { html: code, css: level.previewCss, code: "", tests: level.steps }
+        : { html: level.previewHtml, css: level.previewCss, code, tests: level.steps };
+    sandboxRef.current?.run(payload);
   };
 
   return (
