@@ -427,7 +427,86 @@ const JS_CORE_SECTIONS: Section[] = [
   },
 ];
 
-// Final ordered curriculum: HTML → CSS (basics, flexbox, grid, animations) → JS core → JS advanced.
+// Pull DOM Manipulation & Events out so we can place them right after OOP in the final order.
+const domSection = JS_CORE_SECTIONS.find(s => s.id === "dom")!;
+const eventsSection = JS_CORE_SECTIONS.find(s => s.id === "events")!;
+
+// Add 4 more exercises to the DOM Manipulation section.
+domSection.levels.push(
+  {
+    id: "dom-4",
+    title: "querySelectorAll",
+    emoji: "🔎",
+    difficulty: 2,
+    theory: "`querySelectorAll(selector)` returns a static NodeList of every match. Iterate with forEach.",
+    goal: "Set the textContent of every .item inside #grid to 'X'.",
+    previewHtml: `<div class="stage"><div id="grid" class="grid"><span class="item">a</span><span class="item">b</span><span class="item">c</span><span class="item">d</span></div></div>`,
+    previewCss: `${STAGE_CSS}\n.grid{display:flex;gap:8px;}\n.item{padding:10px 14px;background:#0e7490;color:#ecfeff;border-radius:8px;font-weight:700;}`,
+    starterCode: `// select every .item inside #grid and set text to 'X'\n`,
+    steps: [
+      { label: "All 4 items show 'X'", test: `Array.from(document.querySelectorAll('#grid .item')).every(el => el.textContent === 'X') && document.querySelectorAll('#grid .item').length === 4` },
+    ],
+    hints: ["document.querySelectorAll('#grid .item').forEach(el => el.textContent = 'X');"],
+    solution: `document.querySelectorAll('#grid .item').forEach(el => el.textContent = 'X');`,
+    quiz: [{ q: "querySelectorAll returns…", options: ["an array", "a live HTMLCollection", "a static NodeList", "a single element"], answer: 2 }],
+  },
+  {
+    id: "dom-5",
+    title: "Data Attributes",
+    emoji: "🏷️",
+    difficulty: 2,
+    theory: "`data-*` attributes are read/written via the `dataset` API: `el.dataset.role` ↔ `data-role`.",
+    goal: "Read #user's data-id into window.userId, then set its data-role to 'admin'.",
+    previewHtml: `<div class="stage"><div id="user" data-id="42" data-role="guest" class="card">user</div></div>`,
+    previewCss: `${STAGE_CSS}\n.card{padding:14px 22px;background:#1e293b;color:#22d3ee;border-radius:10px;font-weight:700;}`,
+    starterCode: `const user = document.getElementById('user');\n// window.userId = ...\n// set data-role to 'admin'\n`,
+    steps: [
+      { label: "window.userId === '42'", test: `window.userId === '42'` },
+      { label: "data-role is 'admin'", test: `document.getElementById('user').dataset.role === 'admin'` },
+    ],
+    hints: ["window.userId = user.dataset.id;", "user.dataset.role = 'admin';"],
+    solution: `const user=document.getElementById('user');window.userId=user.dataset.id;user.dataset.role='admin';`,
+    quiz: [{ q: "How do you read data-foo via dataset?", options: ["dataset['data-foo']", "dataset.foo", "getDataset('foo')", "attributes.foo"], answer: 1 }],
+  },
+  {
+    id: "dom-6",
+    title: "Remove an Element",
+    emoji: "🗑️",
+    difficulty: 1,
+    theory: "Detach a node from the DOM with `el.remove()`.",
+    goal: "Remove every <li> with class 'gone' from #list.",
+    previewHtml: `<div class="stage"><ul id="list"><li>keep</li><li class="gone">drop</li><li>keep</li><li class="gone">drop</li></ul></div>`,
+    previewCss: `${STAGE_CSS}\n#list{list-style:square;color:#facc15;font-size:20px;}`,
+    starterCode: `// remove every #list .gone\n`,
+    steps: [
+      { label: "No .gone items remain", test: `document.querySelectorAll('#list .gone').length === 0` },
+      { label: "Two items remain", test: `document.querySelectorAll('#list li').length === 2` },
+    ],
+    hints: ["document.querySelectorAll('#list .gone').forEach(el => el.remove());"],
+    solution: `document.querySelectorAll('#list .gone').forEach(el => el.remove());`,
+    quiz: [{ q: "Modern way to detach a node?", options: ["el.parentNode.removeChild(el)", "el.remove()", "el.delete()", "delete el"], answer: 1 }],
+  },
+  {
+    id: "dom-7",
+    title: "Toggle a Theme",
+    emoji: "🌗",
+    difficulty: 2,
+    theory: "Toggle a class on a root element to flip an entire visual theme via CSS.",
+    goal: "Add the class 'night' on document.body. The preview already styles .night.",
+    previewHtml: `<div class="stage"><div id="card" class="card">hello</div></div>`,
+    previewCss: `${STAGE_CSS}\n.card{padding:24px 36px;background:#fafafa;color:#111;border-radius:12px;font-weight:700;font-size:22px;transition:.3s;}\nbody.night .card{background:#0f172a;color:#22d3ee;box-shadow:0 0 30px #22d3ee55;}`,
+    starterCode: `// add the 'night' class to document.body\n`,
+    steps: [
+      { label: "body has class 'night'", test: `document.body.classList.contains('night')` },
+    ],
+    hints: ["document.body.classList.add('night');"],
+    solution: `document.body.classList.add('night');`,
+    quiz: [{ q: "Best place to flip a global theme class?", options: ["each element", "<html> or <body>", "the <head>", "every <div>"], answer: 1 }],
+  },
+);
+
+// Final ordered curriculum: HTML → CSS → JS core (without dom/events)
+//   → OOP/foundations → DOM Manipulation → DOM & Events Pro → rest of advanced.
 export const SECTIONS: Section[] = [
   // ── HTML track ──
   htmlBasicsSection,
@@ -436,21 +515,24 @@ export const SECTIONS: Section[] = [
   flexboxFroggerSection,
   gridGardenSection,
   cssAnimationsSection,
-  // ── JS core ──
-  ...JS_CORE_SECTIONS,
-  // ── JS advanced ──
+  // ── JS core (basics, conditionals, loops — DOM & Events handled later) ──
+  ...JS_CORE_SECTIONS.filter(s => s.id !== "dom" && s.id !== "events"),
+  // ── JS advanced foundations ──
   functionsSection,
   functionalSection,
   arraysSection,
   stringsSection,
   advancedRegexSection,
-  domAdvancedSection,
-  observersSection,
   errorsSection,
   asyncSection,
   fetchSection,
   prototypesSection,
   oopSection,
+  // ── DOM track (right after OOP, per curriculum design) ──
+  domSection,
+  domAdvancedSection,
+  // ── Architecture & deeper topics ──
+  observersSection,
   solidSection,
   dataStructuresSection,
   algorithmsSection,
@@ -459,6 +541,8 @@ export const SECTIONS: Section[] = [
   patternsSection,
   performanceSection,
   tddSection,
+  // Pure-events drills live near the end as a quick-reference micro-section.
+  eventsSection,
 ];
 
 export const ALL_LEVELS = SECTIONS.flatMap(s => s.levels.map(l => ({ section: s, level: l })));
