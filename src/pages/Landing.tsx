@@ -7,6 +7,7 @@ import { ArrowRight, Sparkles, Zap, Trophy, Code2 } from "lucide-react";
 import { ALL_LEVELS, SECTIONS } from "@/curriculum/data";
 import { useProgress } from "@/hooks/useProgress";
 import shurikenHero from "@/assets/hero-shuriken.png";
+import { SectionIcon } from "@/components/SectionIcon";
 
 export default function Landing() {
   const heroRef = useRef<HTMLDivElement>(null);
