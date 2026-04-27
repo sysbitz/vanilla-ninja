@@ -1,4 +1,4 @@
-import { Lock, Star, Check } from "lucide-react";
+import { Lock, Star } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
 import { SECTIONS, ALL_LEVELS } from "@/curriculum/data";
 import { useProgress } from "@/hooks/useProgress";
@@ -8,6 +8,7 @@ import {
 } from "@/components/ui/sidebar";
 import { cn } from "@/lib/utils";
 import { Progress } from "@/components/ui/progress";
+import { SectionIcon } from "@/components/SectionIcon";
 
 export function CurriculumSidebar() {
   const { levelId } = useParams();
@@ -44,7 +45,8 @@ export function CurriculumSidebar() {
         {SECTIONS.map((s) => (
           <SidebarGroup key={s.id}>
             <SidebarGroupLabel className="flex items-center gap-2">
-              <span>{s.emoji}</span><span>{s.title}</span>
+              <SectionIcon sectionId={s.id} fallbackEmoji={s.emoji} alt="" className="h-5 w-5 shrink-0" />
+              <span>{s.title}</span>
             </SidebarGroupLabel>
             <SidebarGroupContent>
               <SidebarMenu>
