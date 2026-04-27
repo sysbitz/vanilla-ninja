@@ -31,11 +31,11 @@ export default function Login() {
 
   return (
     <>
-      <Helmet><title>Log in — JS Quest</title></Helmet>
+      <Helmet><title>Log in — Vanilla Ninja</title></Helmet>
       <main className="min-h-screen grid place-items-center p-6 bg-background">
         <Card className="w-full max-w-md p-8 space-y-6">
           <div className="text-center">
-            <Link to="/" className="inline-block text-2xl font-black bg-gradient-primary bg-clip-text text-transparent">JS Quest</Link>
+            <Link to="/" className="inline-block text-2xl font-black bg-gradient-primary bg-clip-text text-transparent">Vanilla Ninja</Link>
             <h1 className="text-xl font-semibold mt-3">Log in to track your progress</h1>
           </div>
           <form onSubmit={submit} className="space-y-4">

@@ -39,12 +39,12 @@ export default function Register() {
 
   return (
     <>
-      <Helmet><title>Create account — JS Quest</title></Helmet>
+      <Helmet><title>Create account — Vanilla Ninja</title></Helmet>
       <main className="min-h-screen grid place-items-center p-6 bg-background">
         <Card className="w-full max-w-md p-8 space-y-6">
           <div className="text-center">
-            <Link to="/" className="inline-block text-2xl font-black bg-gradient-primary bg-clip-text text-transparent">JS Quest</Link>
-            <h1 className="text-xl font-semibold mt-3">Start your quest</h1>
+            <Link to="/" className="inline-block text-2xl font-black bg-gradient-primary bg-clip-text text-transparent">Vanilla Ninja</Link>
+            <h1 className="text-xl font-semibold mt-3">Unlock your superpower</h1>
             <p className="text-sm text-muted-foreground">We'll save your stars, XP and level forever.</p>
           </div>
           <form onSubmit={submit} className="space-y-4">

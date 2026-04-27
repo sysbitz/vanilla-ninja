@@ -26,7 +26,7 @@ export const htmlBasicsSection: Section = {
       difficulty: 1,
       language: "html",
       theory: "HTML uses tags like <h1>…<h6> for headings and <p> for paragraphs. The <h1> is the page's main title — there should be only one.",
-      goal: "Add an <h1> with the text 'JS Quest' and a <p> below saying 'Learn by playing.'",
+      goal: "Add an <h1> with the text 'Vanilla Ninja' and a <p> below saying 'Unlock your superpower.'",
       previewCss: SHELL_CSS,
       starterCode: `<!-- Write your HTML below -->\n`,
       steps: [
