@@ -427,15 +427,18 @@ const JS_CORE_SECTIONS: Section[] = [
   },
 ];
 
-// Append advanced sections (kept in separate files for scalability — easy to add 100+ levels).
-SECTIONS.push(
-  // ── HTML & CSS track (visual, game-like) ──
+// Final ordered curriculum: HTML → CSS (basics, flexbox, grid, animations) → JS core → JS advanced.
+export const SECTIONS: Section[] = [
+  // ── HTML track ──
   htmlBasicsSection,
+  // ── CSS track (visual, game-like) ──
   cssBasicsSection,
   flexboxFroggerSection,
   gridGardenSection,
   cssAnimationsSection,
-  // ── JS track ──
+  // ── JS core ──
+  ...JS_CORE_SECTIONS,
+  // ── JS advanced ──
   functionsSection,
   functionalSection,
   arraysSection,
@@ -456,7 +459,7 @@ SECTIONS.push(
   patternsSection,
   performanceSection,
   tddSection,
-);
+];
 
 export const ALL_LEVELS = SECTIONS.flatMap(s => s.levels.map(l => ({ section: s, level: l })));
 export const TOTAL_LEVELS = ALL_LEVELS.length;
