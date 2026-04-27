@@ -24,8 +24,8 @@ export default function LearnPage() {
   return (
     <>
       <Helmet>
-        <title>{level.title} — {section.title} | JS Quest</title>
-        <meta name="description" content={`${level.goal} — interactive vanilla JavaScript challenge.`} />
+        <title>{level.title} — {section.title} | Vanilla Ninja</title>
+        <meta name="description" content={`${level.goal} — interactive HTML, CSS & JavaScript challenge.`} />
       </Helmet>
       <Challenge
         key={level.id}
