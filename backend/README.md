@@ -1,7 +1,7 @@
-# JS Quest — Backend
+# Vanilla Ninja — Backend
 
 This folder is **documentation + source-of-truth SQL** for the Lovable Cloud
-(Supabase) backend that powers JS Quest.
+(Supabase) backend that powers Vanilla Ninja.
 
 > The actual database is provisioned by Lovable Cloud. The migrations applied
 > to the live project mirror the files in [`./schema/`](./schema). Keep them

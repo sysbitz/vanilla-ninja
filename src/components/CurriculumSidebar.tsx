@@ -27,10 +27,10 @@ export function CurriculumSidebar() {
     <Sidebar collapsible="icon" className="border-r border-sidebar-border">
       <SidebarHeader className="border-b border-sidebar-border">
         <Link to="/" className="flex items-center gap-2 px-2 py-1">
-          <div className="h-8 w-8 rounded-md bg-gradient-primary flex items-center justify-center text-primary-foreground font-black shadow-glow-primary">JS</div>
+          <div className="h-8 w-8 rounded-md bg-gradient-primary flex items-center justify-center text-primary-foreground font-black shadow-glow-primary">忍</div>
           <div className="flex flex-col leading-tight">
-            <span className="text-sm font-bold">JS Quest</span>
-            <span className="text-[10px] text-muted-foreground font-mono">Learn JS with fun</span>
+            <span className="text-sm font-bold">Vanilla Ninja</span>
+            <span className="text-[10px] text-muted-foreground font-mono">Unlock your superpower</span>
           </div>
         </Link>
         <div className="px-2 pb-2">

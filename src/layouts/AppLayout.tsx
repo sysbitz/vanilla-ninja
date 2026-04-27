@@ -23,7 +23,7 @@ export default function AppLayout() {
           <header className="h-12 flex items-center justify-between border-b border-border/60 px-3 glass">
             <div className="flex items-center gap-2">
               <SidebarTrigger />
-              <span className="text-sm font-mono text-muted-foreground hidden sm:inline">~ /jsquest</span>
+              <span className="text-sm font-mono text-muted-foreground hidden sm:inline">~ /vanilla-ninja</span>
             </div>
             <div className="flex items-center gap-3">
               {!loading && (user ? (
