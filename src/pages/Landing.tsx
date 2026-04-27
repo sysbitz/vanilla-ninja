@@ -167,7 +167,12 @@ export default function Landing() {
               className="group glass rounded-xl p-5 hover:border-primary/60 hover:shadow-glow-primary transition-all"
               aria-label={`Start ${s.title}`}
             >
-              <div className="text-4xl mb-3 group-hover:scale-110 transition-transform" aria-hidden="true">{s.emoji}</div>
+              <SectionIcon
+                sectionId={s.id}
+                fallbackEmoji={s.emoji}
+                alt={`${s.title} icon`}
+                className="h-16 w-16 mb-3 group-hover:scale-110 transition-transform"
+              />
               <h3 className="font-bold text-lg mb-1">{s.title}</h3>
               <p className="text-sm text-muted-foreground mb-3">{s.blurb}</p>
               <div className="text-xs font-mono text-primary">{s.levels.length} levels →</div>
