@@ -81,6 +81,7 @@ export const domAdvancedSection: Section = {
       hints: ["localStorage.setItem('prefs', JSON.stringify({theme:'dark'}));"],
       solution: `localStorage.setItem('prefs', JSON.stringify({theme:'dark'}));\nconst prefs = JSON.parse(localStorage.getItem('prefs'));`,
       quiz: [{ q: "localStorage stores values as…", options: ["any type", "strings only", "JSON only", "buffers"], answer: 1 }],
+    },
     {
       id: "doma-5",
       title: "Drag & Drop",
