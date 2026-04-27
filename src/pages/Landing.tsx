@@ -176,7 +176,7 @@ export default function Landing() {
       </section>
 
       <footer className="border-t border-border/60 mt-16 py-8 text-center text-xs text-muted-foreground font-mono">
-        Built with vanilla HTML, CSS &amp; JS love. No frameworks were harmed in your learning.
+        Built with vanilla HTML, CSS &amp; JS. Train hard. Ship harder. 忍
       </footer>
     </div>
   );
