@@ -40,7 +40,9 @@ const STAGE_CSS = `
   .box { width: 80px; height: 80px; background: #facc15; border-radius: 12px; transition: all .3s ease; }
 `;
 
-export const SECTIONS: Section[] = [
+// JS core sections (basics → conditionals → loops → dom → events) defined inline below,
+// then appended AFTER the HTML & CSS track so the learning flow is HTML → CSS → JS.
+const JS_CORE_SECTIONS: Section[] = [
   // ───────────────────────────── BASICS ─────────────────────────────
   {
     id: "basics",
