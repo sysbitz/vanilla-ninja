@@ -31,11 +31,11 @@ export const htmlBasicsSection: Section = {
       starterCode: `<!-- Write your HTML below -->\n`,
       steps: [
         { label: "Has exactly one <h1>", test: `document.querySelectorAll('h1').length === 1` },
-        { label: "<h1> text is 'JS Quest'", test: `document.querySelector('h1')?.textContent.trim() === 'JS Quest'` },
-        { label: "Has a <p> with the tagline", test: `Array.from(document.querySelectorAll('p')).some(p=>p.textContent.includes('Learn by playing'))` },
+        { label: "<h1> text is 'Vanilla Ninja'", test: `document.querySelector('h1')?.textContent.trim() === 'Vanilla Ninja'` },
+        { label: "Has a <p> with the tagline", test: `Array.from(document.querySelectorAll('p')).some(p=>p.textContent.includes('Unlock your superpower'))` },
       ],
-      hints: ["<h1>JS Quest</h1>", "<p>Learn by playing.</p>"],
-      solution: `<h1>JS Quest</h1>\n<p>Learn by playing.</p>`,
+      hints: ["<h1>Vanilla Ninja</h1>", "<p>Unlock your superpower.</p>"],
+      solution: `<h1>Vanilla Ninja</h1>\n<p>Unlock your superpower.</p>`,
       quiz: [
         { q: "Which tag is the main page heading?", options: ["<head>", "<h1>", "<title>", "<header>"], answer: 1 },
         { q: "How many <h1> per page (best practice)?", options: ["0", "1", "as many as you want", "exactly 6"], answer: 1 },
